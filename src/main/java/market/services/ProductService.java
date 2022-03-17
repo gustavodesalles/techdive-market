@@ -2,7 +2,9 @@ package market.services;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
+import market.model.dao.CategoryDAO;
 import market.model.dao.ProductDAO;
+import market.model.persistence.Category;
 import market.model.persistence.Product;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,17 +13,26 @@ public class ProductService {
     private static final Logger LOG = LogManager.getLogger(ProductService.class);
     private EntityManager entityManager;
     private ProductDAO productDAO;
+    private CategoryService categoryService;
 
     public ProductService(EntityManager entityManager) {
         this.entityManager = entityManager;
         this.productDAO = new ProductDAO(entityManager);
+        this.categoryService = new CategoryService(entityManager);
     }
 
     public void create(Product product) {
         this.LOG.info("Preparando para criar um produto.");
+
         if (product == null) {
             this.LOG.error("O produto está nulo!");
-            throw new RuntimeException("O produto está nulo!");
+            throw new RuntimeException("Null product");
+        }
+        String categoryName = product.getCategory().getName();
+        this.LOG.info("Buscando categoria " + categoryName);
+        Category category = categoryService.findByName(categoryName);
+        if (category != null) {
+            product.setCategory(category);
         }
 
         try {
