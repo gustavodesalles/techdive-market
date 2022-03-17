@@ -18,10 +18,11 @@ public class Program {
         EntityManager entityManager = new JpaConnectionFactory().getEntityManager();
         ProductService productService = new ProductService(entityManager);
 
-        Product product = new Product("Notebook", "Dell Inspiron 3501",
-                new BigDecimal(3719.99),
-                new Category("Informática"));
+        Product product = new Product("Doritos", "Cool Ranch",
+                new BigDecimal(14.95),
+                new Category("Alimentos"));
 
-        productService.create(product);
+        //productService.create(product);
+        productService.delete(1L);
     }
 }
