@@ -19,4 +19,12 @@ public class CategoryDAO {
         String sql = "SELECT * FROM Category WHERE name =:name";
         return (Category) this.entityManager.createNativeQuery(sql, Category.class).setParameter("name",name).getSingleResult();
     }
+
+    public Category getById(Long id) {
+        return this.entityManager.find(Category.class, id);
+    }
+
+    public void delete(Category category) {
+        this.entityManager.remove(category);
+    }
 }

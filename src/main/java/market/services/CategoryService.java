@@ -1,6 +1,7 @@
 package market.services;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.NoResultException;
 import market.model.dao.CategoryDAO;
 import market.model.persistence.Category;
@@ -30,5 +31,25 @@ public class CategoryService {
             this.LOG.error("Categoria não encontrada; criando nova categoria.");
             return null;
         }
+    }
+
+    public void delete(Long id) {
+
+    }
+
+    public Category getById(Long id) {
+        if (id == null) {
+            this.LOG.error("O ID está nulo!");
+            throw new RuntimeException("Null parameter");
+        }
+
+        Category category = this.categoryDAO.getById(id);
+
+        if (category == null) {
+            this.LOG.error("Não foi encontrada a categoria de ID " + id + ".");
+            throw new EntityNotFoundException("Category not found");
+        }
+
+        return null;
     }
 }
