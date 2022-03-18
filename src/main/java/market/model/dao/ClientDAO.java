@@ -3,6 +3,7 @@ package market.model.dao;
 import jakarta.persistence.EntityManager;
 import market.model.persistence.Client;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class ClientDAO {
@@ -26,6 +27,13 @@ public class ClientDAO {
         String sql = "SELECT * FROM Client";
         return this.entityManager.createNativeQuery(sql, Client.class)
                 .getResultList();
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<Client> listByName(String name) {
+        String sql = "SELECT * FROM Client WHERE name =:name";
+        return this.entityManager.createNativeQuery(sql, Client.class)
+                .setParameter("name", name).getResultList();
     }
 
     public Client getById(Long id) {

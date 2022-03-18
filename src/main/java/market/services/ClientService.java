@@ -1,10 +1,15 @@
 package market.services;
 
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityNotFoundException;
 import market.model.dao.ClientDAO;
 import market.model.persistence.Client;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ClientService {
     public static final Logger LOG = LogManager.getLogger(ClientService.class);
@@ -28,6 +33,7 @@ public class ClientService {
             LOG.error("O CPF é inválido!");
             throw new RuntimeException("Invalid CPF");
         }
+        client.setCpf(formatCpf(cpf));
 
         try {
             beginTransaction();
@@ -41,6 +47,72 @@ public class ClientService {
 
     }
 
+    public void delete(Long id) {
+        this.LOG.info("Preparando para encontrar o cliente.");
+        if (id == null) {
+            this.LOG.error("O ID do cliente informado está nulo!");
+            throw new RuntimeException("Null ID");
+        }
+
+        Client client = clientDAO.getById(id);
+        validateIfNull(client);
+
+        beginTransaction();
+        clientDAO.delete(client);
+        commitAndCloseTransaction();
+        LOG.info("Cliente deletado com sucesso!");
+    }
+
+    public void update(Client newClient, Long id) {
+        LOG.info("Preparando para atualizar o produto.");
+        if (newClient == null || id == null) {
+            LOG.error("Um dos parâmetros não pode ser nulo!");
+            throw new RuntimeException("Parameter is null");
+        }
+
+        Client client = clientDAO.getById(id);
+        validateIfNull(client);
+
+        beginTransaction();
+        client.setName(newClient.getName());
+        client.setCpf(newClient.getCpf());
+        client.setBirthdate(newClient.getBirthdate());
+        commitAndCloseTransaction();
+        LOG.info("Cliente atualizado com sucesso!");
+    }
+
+    public List<Client> listAll() {
+        LOG.info("Preparando para listar os clientes.");
+        List<Client> clients = this.clientDAO.listAll();
+
+        if (clients == null) {
+            LOG.error("Não foram encontrados clientes!");
+            return new ArrayList<Client>();
+        }
+
+        LOG.info("Foram encontrados " + clients.size() + " clientes.");
+        return clients;
+    }
+
+    public List<Client> listByName(String name) {
+        if (name == null || name.isEmpty()) {
+            LOG.error("O parâmetro está nulo!");
+            throw new RuntimeException("Null parameter");
+        }
+
+        LOG.info("Preparando para buscar os clientes de nome: " + name);
+        List<Client> clients = clientDAO.listByName(name.toLowerCase());
+
+        if (clients == null) {
+            LOG.error("Não foram encontrados clientes!");
+            return new ArrayList<Client>();
+        }
+
+        LOG.info("Foram encontrados " + clients.size() + " clientes.");
+        return clients;
+    }
+
+
     private void beginTransaction() {
         entityManager.getTransaction().begin();
     }
@@ -48,6 +120,13 @@ public class ClientService {
     private void commitAndCloseTransaction() {
         entityManager.getTransaction().commit();
         entityManager.close();
+    }
+
+    private void validateIfNull(Client client) {
+        if (client == null) {
+            LOG.error("O cliente não existe!");
+            throw new EntityNotFoundException("Client not found");
+        }
     }
 
     private String formatCpf(String cpf) {
