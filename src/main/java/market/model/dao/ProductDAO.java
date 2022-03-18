@@ -29,10 +29,18 @@ public class ProductDAO {
         return this.entityManager.merge(product);
     }
 
+    @SuppressWarnings("unchecked")
     public List<Product> listAll() {
         String sql = "SELECT * FROM Product";
         return this.entityManager.createNativeQuery(sql, Product.class)
                 .getResultList();
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<Product> listByName(String name) {
+        String sql = "SELECT * FROM Product WHERE name =:name";
+        return this.entityManager.createNativeQuery(sql, Product.class)
+                .setParameter("name", name).getResultList();
     }
 
 }

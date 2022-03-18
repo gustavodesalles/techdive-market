@@ -21,14 +21,14 @@ public class Program {
         ProductService productService = new ProductService(entityManager);
         CategoryService categoryService = new CategoryService(entityManager);
 
-        Product product = new Product("Computador", "MSX",
-                new BigDecimal(10495.95),
+        Product product = new Product("Computador", "Atari ST",
+                new BigDecimal(11599.95),
                 new Category("Informática"));
 
         //productService.create(product);
         //productService.delete(3L);
         //productService.update(product, 4L);
-        List<Product> products = productService.listAll();
+        List<Product> products = productService.listByName("Computador");
         products.stream().forEach(product1 -> System.out.println(product1));
 
     }

@@ -101,6 +101,23 @@ public class ProductService {
             return new ArrayList<Product>();
         }
 
+        this.LOG.info("Foram encontrados " + products.size() + " produtos.");
+        return products;
+    }
+
+    public List<Product> listByName(String name) {
+        if (name == null || name.isEmpty()) {
+            this.LOG.error("O parâmetro está nulo!");
+            throw new RuntimeException("Null parameter");
+        }
+
+        this.LOG.info("Preparando para buscar os produtos de nome: " + name);
+        List<Product> products = this.productDAO.listByName(name.toLowerCase());
+
+        if (products == null) {
+            this.LOG.error("Não foram encontrados produtos!");
+            return new ArrayList<Product>();
+        }
 
         this.LOG.info("Foram encontrados " + products.size() + " produtos.");
         return products;
