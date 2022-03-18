@@ -10,6 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class Program {
 
@@ -21,12 +22,14 @@ public class Program {
         CategoryService categoryService = new CategoryService(entityManager);
 
         Product product = new Product("Computador", "MSX",
-                new BigDecimal(10395.95),
+                new BigDecimal(10495.95),
                 new Category("Informática"));
 
-        productService.create(product);
+        //productService.create(product);
         //productService.delete(3L);
-
+        //productService.update(product, 4L);
+        List<Product> products = productService.listAll();
+        products.stream().forEach(product1 -> System.out.println(product1));
 
     }
 }

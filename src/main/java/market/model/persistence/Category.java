@@ -16,7 +16,7 @@ public class Category {
     }
 
     public Category(String name) {
-        this.name = name;
+        this.name = name.toLowerCase();
     }
 
     public long getId() {
@@ -32,7 +32,7 @@ public class Category {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = name.toLowerCase();
     }
 
     @Override

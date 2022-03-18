@@ -26,8 +26,8 @@ public class Product {
     }
 
     public Product(String name, String description, BigDecimal price, Category category) {
-        this.name = name;
-        this.description = description;
+        this.name = name.toLowerCase();
+        this.description = description.toLowerCase();
         this.price = price;
         this.category = category;
     }
@@ -45,7 +45,7 @@ public class Product {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = name.toLowerCase();
     }
 
     public String getDescription() {
@@ -53,7 +53,7 @@ public class Product {
     }
 
     public void setDescription(String description) {
-        this.description = description;
+        this.description = description.toLowerCase();
     }
 
     public BigDecimal getPrice() {
